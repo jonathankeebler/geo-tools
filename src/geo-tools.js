@@ -58,7 +58,7 @@ exports.geocode = function (address, callback, options) {
     };
 
     var req = https.get(options, function (res) {
-        console.log('Response: ' + res.statusCode);
+        // console.log('Response: ' + res.statusCode);
         var results = '';
 
         res.on('error', function (e) {
@@ -72,7 +72,7 @@ exports.geocode = function (address, callback, options) {
         res.on('end', function () {
             var body = JSON.parse(results);
             if (body.error_message || !body.results || !body.results.length) {
-                console.log(body.error_message);
+                if (body.error_message) console.log(body.error_message);
 
                 if (callback) {
                     return callback({ error: body.error_message || 'invalid response' });
@@ -110,7 +110,7 @@ exports.reverseGeocode = function (lat, lng, callback) {
         };
 
     var req = https.get(options, function (res) {
-        console.log('Response: ' + res.statusCode);
+        // console.log('Response: ' + res.statusCode);
         var results = '';
 
         res.on('error', function (e) {
