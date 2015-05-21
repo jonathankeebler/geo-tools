@@ -23,22 +23,43 @@ describe('GeoTools', function(){
 	});
 
 	describe('reverse geocode', function(){
-		it('should reverse geocode a given set of lat & lng', function(){
+		it('should reverse geocode a given set of lat & lng', function(done){
 			var lat = 52.518611;
 			var lng = 13.408056;
-			geotools.reverseGeocode(lat, lng, function(address){
+			geotools.reverseGeocode(lat, lng, function(error, address){
+				should.not.exist(error);
 				address.should.have.property('full_address').and.be.type('string');
+				
+				done();
+			});
+		});
+		
+		it('should throw errors via callback', function(done){
+			var lat = 0;
+			var lng = 0;
+			geotools.reverseGeocode(lat, lng, function(error, address){
+				should.exist(error);
+				console.log(error)
+				should.not.exist(address);
+				
+				done();
 			});
 		});
 
-		it('can accept an object literal or 2 numbers for the lat/lon', function(){
+		it('can accept an object literal or 2 numbers for the lat/lon', function(done){
 			var coordinates = { lat: 51.515400, lng: 7.455185 };
-			geotools.reverseGeocode(coordinates, function(address){
-				reverseGeocode(51.515400, 7.455185, function(address1){
-					address.should.be.exactly(address1)
+			geotools.reverseGeocode(coordinates, function(error, address){
+				should.not.exist(error);
+				geotools.reverseGeocode(51.515400, 7.455185, function(error, address1){
+					should.not.exist(error);
+					address.should.be.eql(address1)
+					
+					done();
 				});
 			});
 		});
+		
+		
 	});
 
 	describe('distance', function(){

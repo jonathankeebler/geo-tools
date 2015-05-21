@@ -115,6 +115,7 @@ exports.reverseGeocode = function (lat, lng, callback) {
 
         res.on('error', function (e) {
             console.log('Error: ' + e.message);
+			if(callback) callback(e);
         });
 
         res.on('data', function (data) {
@@ -125,13 +126,24 @@ exports.reverseGeocode = function (lat, lng, callback) {
             var body = JSON.parse(results);
             if (body.error_message) {
                 console.log(body.error_message);
+				if(callback) callback(body.error_message);
                 return;
             }
 
-            var address = gMapsFormResponseData(body);
+			var error = null;
+			var address = null;
+			try
+			{
+				address = gMapsFormResponseData(body);
+			}
+			catch(err)
+			{
+				error = err;
+			}
+            
 
             if (callback) {
-                callback(address);
+                callback(error, address);
             } else {
                 return address;
             }
